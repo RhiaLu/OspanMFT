@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MFT 與 OSPAN 心理學實驗示範</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E7EBF0;
+  --ink:#18202E;
+  --muted:#5A6474;
+  --rule:#C3CBD6;
+  --field:#F7F9FB;
+  --focus:#2F6BE5;
+  --R:#E5383B; --G:#2DB24F; --Y:#F6CF1D; --B:#2F6BE5;
+  --kai:"DFKai-SB","BiauKai","標楷體","Kaiti TC","STKaiti","KaiTi","Noto Serif TC",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[hidden]{display:none!important}
+
+/* ---------- setup ---------- */
+.tabs{max-width:1180px;margin:0 auto;padding:18px 32px 0;display:flex;gap:28px}
+.tabs a{color:var(--muted);text-decoration:none;font-weight:500;padding:6px 0 8px;border-bottom:2px solid transparent}
+.tabs a:hover{color:var(--ink)}
+.tabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--ink);font-weight:700}
+.setup{max-width:1180px;margin:0 auto;padding:28px 32px 64px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:48px;align-items:start}
+.intro h1{font-family:var(--kai);font-weight:700;font-size:40px;line-height:1.2;margin:0 0 10px;letter-spacing:.02em}
+.intro p{margin:0 0 24px;color:var(--muted);max-width:34em}
+.monitor{background:#2A2F38;border-radius:14px;padding:14px 14px 0;box-shadow:0 1px 0 #fff inset}
+.screen{position:relative;aspect-ratio:4/3;background:#000;border-radius:4px;overflow:hidden}
+.monitor .stand{height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 4px;color:#9AA3B2;font-size:13px}
+.monitor .stand b{color:#fff;font-weight:500}
+.keys{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;margin-top:22px;font-size:14px;color:var(--muted)}
+.keys kbd{font-family:var(--sans);font-size:13px;min-width:2.4em;text-align:center;display:inline-block;padding:1px 8px;border:1px solid var(--rule);border-bottom-width:2px;border-radius:5px;background:var(--field);color:var(--ink)}
+
+form{display:block}
+fieldset{border:0;border-top:1px solid var(--rule);margin:0;padding:18px 0 22px}
+fieldset:first-of-type{border-top:0;padding-top:4px}
+legend{font-weight:700;font-size:16px;padding:0;margin-bottom:10px;float:left;width:100%}
+legend + *{clear:both}
+.hint{color:var(--muted);font-size:13px;margin:6px 0 0}
+
+.levels{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.levels th{font-weight:500;font-size:13px;color:var(--muted);text-align:left;padding:0 8px 6px 0}
+.levels td{padding:5px 8px 5px 0;vertical-align:middle}
+.levels td.name{font-weight:700;white-space:nowrap}
+.levels td.name span{display:block;font-weight:400;font-size:12px;color:var(--muted)}
+.levels td.ratio{font-size:13px;color:var(--muted)}
+.levels tfoot td{border-top:1px solid var(--rule);padding-top:8px;font-weight:500}
+input[type=number]{width:76px;padding:6px 8px;border:1px solid var(--rule);border-radius:6px;background:var(--field);font-variant-numeric:tabular-nums}
+input[type=number]:disabled{opacity:.45}
+
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.swatches label{position:relative;cursor:pointer}
+.swatches input{position:absolute;opacity:0;pointer-events:none}
+.swatches span{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 9px;border:1px solid var(--rule);border-radius:999px;background:var(--field)}
+.swatches i{width:14px;height:14px;border-radius:50%;display:inline-block}
+.swatches input:checked + span{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink) inset;font-weight:700}
+.swatches input:focus-visible + span{outline:2px solid var(--focus);outline-offset:2px}
+
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:var(--field)}
+.seg label{cursor:pointer}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:block;padding:6px 14px}
+.seg label+label span{border-left:1px solid var(--rule)}
+.seg input:checked + span{background:var(--ink);color:#fff}
+.seg input:focus-visible + span{outline:2px solid var(--focus);outline-offset:-3px}
+
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:10px}
+.row:first-of-type{margin-top:0}
+.check{display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.check input{width:16px;height:16px;accent-color:var(--ink)}
+.timing{display:grid;grid-template-columns:repeat(3,auto);gap:6px 16px;justify-content:start}
+.timing label{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:3px}
+.timing input{width:96px}
+input[type=range]{accent-color:var(--ink);width:160px}
+
+.actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;padding-top:8px}
+.btn{border:1px solid var(--ink);background:transparent;padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:500}
+.btn.primary{background:var(--ink);color:#fff}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.err{color:#B3261E;font-size:13px;margin:8px 0 0;min-height:1em}
+
+/* ---------- runner ---------- */
+#runner{position:fixed;inset:0;background:#000;color:#fff;z-index:10;cursor:none;user-select:none;-webkit-user-select:none}
+#runner.showcursor{cursor:default}
+#stage{position:absolute;inset:0}
+.arrow{position:absolute}
+.arrow svg{display:block;width:100%;height:100%}
+.fix{position:absolute;left:50%;top:50%;transform:translate(-50%,-52%);font-family:var(--kai);line-height:1}
+.msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--kai);text-align:center;gap:5.5vh;padding:0 4vw}
+.msg p{margin:0;line-height:1.3}
+.msg .small{font-family:var(--sans);color:#777;font-size:max(14px,1.8vh)}
+#hudText{position:absolute;top:2vh;right:2.4vw;color:#555;font-size:max(13px,1.8vh);font-variant-numeric:tabular-nums;font-family:var(--sans)}
+#answer{position:absolute;left:0;right:0;bottom:2.5vh;display:flex;flex-direction:column;align-items:center;gap:.6vh;text-align:center;font-family:var(--kai)}
+#answer .dir{font-size:6.5vh;line-height:1.05;font-weight:700}
+#answer .ratio{font-size:3vh;color:#bbb;font-variant-numeric:tabular-nums}
+#answer .pm{font-size:2.8vh;font-weight:700}
+#answer .resp{font-family:var(--sans);font-size:2.2vh;color:#999}
+#answer .next{font-family:var(--sans);font-size:max(12px,1.6vh);color:#555;margin-top:.4vh}
+
+/* ---------- results ---------- */
+.results{max-width:1180px;margin:0 auto;padding:40px 32px 64px}
+.results h2{font-family:var(--kai);font-size:34px;margin:0 0 6px}
+.results .lead{color:var(--muted);margin:0 0 24px}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);margin-bottom:28px}
+.summary div{padding:14px 18px 16px 0}
+.summary div + div{padding-left:18px;border-left:1px solid var(--rule)}
+.summary h3{margin:0 0 4px;font-size:15px}
+.summary .acc{font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.summary p{margin:2px 0 0;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+.tablewrap{overflow-x:auto;border-top:1px solid var(--rule)}
+table.trials{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:14px}
+table.trials th{text-align:left;font-weight:500;color:var(--muted);font-size:13px;padding:10px 10px 8px 0;border-bottom:1px solid var(--rule);white-space:nowrap}
+table.trials td{padding:7px 10px 7px 0;border-bottom:1px solid #D6DCE4;white-space:nowrap}
+table.trials td.dot i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:0}
+.ok{color:#1E7A3A;font-weight:700}.bad{color:#B3261E;font-weight:700}.none{color:var(--muted)}
+.copied{color:var(--muted);font-size:13px}
+
+/* ---------- OSPAN ---------- */
+.screen{container-type:size}
+input[type=text]{padding:6px 10px;border:1px solid var(--rule);border-radius:6px;background:var(--field);font-family:var(--kai);font-size:20px;letter-spacing:.12em;width:100%;max-width:380px}
+.stack{display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--muted)}
+.flow{margin:22px 0 0;padding-left:1.4em;color:var(--muted);font-size:14px}
+.flow li{margin:4px 0;padding-left:4px}
+.flow kbd{font-family:var(--sans);font-size:12px;padding:0 6px;border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;background:var(--field);color:var(--ink)}
+.o-pv{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7cqh;color:#fff;font-family:var(--kai)}
+.o-pv .m{font-size:9cqh}
+.o-pv .l{font-size:28cqh;line-height:1}
+.o-pv .tf{display:flex;gap:6cqw}
+.o-pv .tf span{border:1px solid #666;border-radius:4px;padding:1cqh 5cqw;font-size:6cqh}
+.o-pv .bx{display:flex;gap:2cqw}
+.o-pv .bx span{width:13cqh;height:16cqh;border:1px solid #666;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10cqh}
+#oRunner{position:fixed;inset:0;background:#000;color:#fff;z-index:10;user-select:none;-webkit-user-select:none;font-family:var(--kai)}
+#oStage{position:absolute;inset:0}
+#oHud{position:absolute;top:2vh;right:2.4vw;color:#555;font-size:max(13px,1.8vh);font-family:var(--sans);font-variant-numeric:tabular-nums}
+.o-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3.6vh;padding:0 4vw;text-align:center}
+.o-msg{margin:0;font-size:4.2vh;line-height:1.35}
+.o-sub{margin:0;font-family:var(--sans);font-size:max(14px,2vh);color:#999}
+.o-math{font-size:9vh;letter-spacing:.03em;font-variant-numeric:tabular-nums}
+.o-tf{display:flex;gap:5vw}
+.o-tf button{font-family:var(--kai);font-size:5vh;min-width:18vh;padding:1.4vh 3vh 1vh;background:transparent;color:#fff;border:2px solid #666;border-radius:1.2vh;cursor:pointer;line-height:1.2}
+.o-tf button:hover{border-color:#fff}
+.o-tf button small{display:block;font-family:var(--sans);font-size:max(12px,1.6vh);color:#888}
+.o-letter{font-size:24vh;line-height:1}
+.o-fb{font-size:6vh;font-weight:700}
+.o-fb.good{color:#2DB24F}.o-fb.bad{color:#E5383B}
+.o-title{font-size:4.2vh;font-weight:700}
+.o-boxes{display:flex;gap:1.4vh;flex-wrap:wrap;justify-content:center}
+.o-box{width:9.5vh;height:11.5vh;border:2px solid #444;border-radius:1vh;display:flex;align-items:center;justify-content:center;font-size:6.8vh}
+.o-box.cur{border-color:#fff}
+.o-box.ok{border-color:#2DB24F;color:#fff}
+.o-box.bad{border-color:#E5383B;color:#E5383B}
+.o-pad{display:grid;gap:1.2vh}
+.o-pad button{font-family:var(--kai);font-size:5vh;background:#161616;color:#fff;border:1px solid #444;border-radius:1vh;cursor:pointer;padding:0}
+.o-pad button:hover{background:#2a2a2a;border-color:#888}
+.o-ctrl{display:flex;gap:1.4vh;flex-wrap:wrap;justify-content:center}
+.o-ctrl button{font-family:var(--sans);font-size:max(13px,1.9vh);padding:1vh 2.2vh;background:transparent;color:#ddd;border:1px solid #666;border-radius:.8vh;cursor:pointer}
+.o-ctrl button.go{background:#fff;color:#000;border-color:#fff;font-weight:700}
+.o-row{display:flex;align-items:center;gap:2vh}
+.o-row .lab{font-family:var(--sans);font-size:max(13px,1.9vh);color:#999;width:11vh;text-align:right}
+.o-chips{display:flex;flex-wrap:wrap;gap:.8vh 2.4vh;justify-content:center;max-width:90vw;font-size:2.4vh}
+.o-chips .g{color:#bbb}.o-chips .b{color:#E5383B}
+.o-next{font-family:var(--sans);font-size:max(12px,1.6vh);color:#555}
+
+@media (max-width:860px){
+  .tabs{padding:14px 18px 0}
+  .setup{grid-template-columns:1fr;gap:28px;padding:24px 18px 48px}
+  .intro h1{font-size:32px}
+  .results{padding:24px 18px 48px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<nav class="tabs" aria-label="選擇實驗">
+  <a href="#mft" id="tabMft">多數決作業 MFT</a>
+  <a href="#ospan" id="tabOspan">操作廣度 OSPAN</a>
+</nav>
+
+<main id="setupView" class="setup">
+  <section class="intro">
+    <h1>多數決作業（MFT）</h1>
+    <p>判斷畫面上多數箭頭朝向哪一邊；看到目標顏色的箭頭時，改按空白鍵。設定好每個 level 的次數後，用全螢幕開始，投影給大家看。</p>
+    <div class="monitor" aria-label="刺激畫面預覽">
+      <div class="screen" id="preview"></div>
+      <div class="stand"><span id="pvLabel">預覽</span><b id="pvAnswer"></b></div>
+    </div>
+    <div class="keys">
+      <kbd>Z</kbd><span>主要方向朝左</span>
+      <kbd>/</kbd><span>主要方向朝右</span>
+      <kbd>空白鍵</kbd><span>出現目標顏色（PM）</span>
+      <kbd>Enter</kbd><span>顯示答案；看完答案進下一題（也可點滑鼠）</span>
+      <kbd>Esc</kbd><span>提前結束並看結果（全螢幕時按兩次）</span>
+    </div>
+  </section>
+
+  <form id="cfg" autocomplete="off">
+    <fieldset>
+      <legend>每個 level 的次數</legend>
+      <table class="levels">
+        <thead><tr><th>Level</th><th>次數</th><th>其中 PM</th><th>左右比例組合</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Set 1<span>1 個箭頭</span></td><td><input type="number" id="n1" min="0" max="500" value="12" aria-label="Set 1 次數"></td><td><input type="number" id="p1" min="0" max="500" value="1" aria-label="Set 1 PM 次數" class="pmn"></td><td class="ratio">1：0</td></tr>
+          <tr><td class="name">Set 3<span>3 個箭頭</span></td><td><input type="number" id="n3" min="0" max="500" value="12" aria-label="Set 3 次數"></td><td><input type="number" id="p3" min="0" max="500" value="1" aria-label="Set 3 PM 次數" class="pmn"></td><td class="ratio">3：0、2：1</td></tr>
+          <tr><td class="name">Set 5<span>5 個箭頭</span></td><td><input type="number" id="n5" min="0" max="500" value="12" aria-label="Set 5 次數"></td><td><input type="number" id="p5" min="0" max="500" value="1" aria-label="Set 5 PM 次數" class="pmn"></td><td class="ratio">5：0、4：1、3：2</td></tr>
+        </tbody>
+        <tfoot><tr><td>合計</td><td id="totalN">36</td><td id="totalP">3</td><td></td></tr></tfoot>
+      </table>
+      <p class="hint">比例組合會在該 level 內平均輪流出現，左右方向各半；設為 0 就跳過該 level。</p>
+      <div class="row" style="margin-top:14px">
+        <span>出題順序</span>
+        <div class="seg" role="radiogroup" aria-label="出題順序">
+          <label><input type="radio" name="order" value="seq" checked><span>依 level（1→3→5）</span></label>
+          <label><input type="radio" name="order" value="mix"><span>全部混合隨機</span></label>
+        </div>
+      </div>
+      <div class="row"><label class="check"><input type="checkbox" id="breaks" checked> 依 level 進行時，每個 level 之間停下來</label></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>PM 目標顏色</legend>
+      <div class="swatches" id="pmColors">
+        <label><input type="radio" name="pm" value="R" checked><span><i style="background:var(--R)"></i>紅</span></label>
+        <label><input type="radio" name="pm" value="G"><span><i style="background:var(--G)"></i>綠</span></label>
+        <label><input type="radio" name="pm" value="Y"><span><i style="background:var(--Y)"></i>黃</span></label>
+        <label><input type="radio" name="pm" value="B"><span><i style="background:var(--B)"></i>藍</span></label>
+        <label><input type="radio" name="pm" value="none"><span>不做 PM</span></label>
+      </div>
+      <p class="hint">同原程式：一般題只用其他三種顏色，目標顏色只在 PM 題出現。</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>答案顯示</legend>
+      <div class="row"><label class="check"><input type="checkbox" id="showAns" checked> 每題作答後顯示答案（主要箭頭朝向）</label></div>
+      <div class="row"><label class="check"><input type="checkbox" id="revealKey" checked> 箭頭結束後先空白等待，按 Enter 才顯示答案</label></div>
+      <div class="row">
+        <span>答案停留</span>
+        <div class="seg" role="radiogroup" aria-label="答案停留方式">
+          <label><input type="radio" name="adv" value="manual" checked><span>按 Enter 才下一題</span></label>
+          <label><input type="radio" name="adv" value="auto"><span>自動</span></label>
+        </div>
+        <label style="display:inline-flex;align-items:center;gap:6px"><input type="number" id="ansMs" min="300" max="20000" step="100" value="2500" aria-label="答案自動停留毫秒"> ms</label>
+      </div>
+      <p class="hint">結束時一律會列出每一題的正確答案與作答紀錄。</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>時間與畫面</legend>
+      <div class="timing">
+        <label>注視點 +（ms）<input type="number" id="fixMs" min="0" max="10000" step="50" value="1000"></label>
+        <label>箭頭（ms）<input type="number" id="stimMs" min="100" max="20000" step="50" value="2000"></label>
+        <label>空白（ms）<input type="number" id="blankMs" min="0" max="10000" step="50" value="1500"></label>
+      </div>
+      <div class="row"><label class="check"><input type="checkbox" id="untilResp"> 箭頭一直顯示，直到有人作答</label></div>
+      <div class="row"><label class="check"><input type="checkbox" id="hideOnResp" checked> 作答後箭頭立即消失（同原程式）</label></div>
+      <div class="row">
+        <label for="size">箭頭大小</label><input type="range" id="size" min="0.6" max="1.4" step="0.05" value="1"><output id="sizeOut">100%</output>
+      </div>
+      <div class="row"><label class="check"><input type="checkbox" id="hud" checked> 角落顯示題號</label></div>
+    </fieldset>
+
+    <div class="actions">
+      <button type="button" class="btn primary" id="startFs">全螢幕開始</button>
+      <button type="button" class="btn" id="startWin">在此視窗開始</button>
+    </div>
+    <p class="err" id="err" role="alert"></p>
+  </form>
+</main>
+
+<div id="runner" hidden>
+  <div id="stage"></div>
+  <div id="answer" hidden></div>
+  <div id="hudText"></div>
+</div>
+
+<main id="resultView" class="results" hidden>
+  <h2>結果</h2>
+  <p class="lead" id="resLead"></p>
+  <div class="summary" id="summary"></div>
+  <div class="actions" style="margin-bottom:20px">
+    <button type="button" class="btn primary" id="again">用相同設定再做一次</button>
+    <button type="button" class="btn" id="back">回到設定</button>
+    <button type="button" class="btn" id="copy">複製結果（CSV）</button>
+    <span class="copied" id="copied" aria-live="polite"></span>
+  </div>
+  <div class="tablewrap"><table class="trials" id="trialTable"></table></div>
+</main>
+
+<!-- ================= OSPAN ================= -->
+<main id="ospanSetup" class="setup" hidden>
+  <section class="intro">
+    <h1>操作廣度作業（OSPAN）</h1>
+    <p>一邊判斷算式對不對，一邊記住穿插出現的注音符號。每個嘗試的最後，依出現順序把注音填進格子，確認之後才揭曉答案。</p>
+    <div class="monitor" aria-label="作業畫面預覽">
+      <div class="screen" id="oPreview"></div>
+      <div class="stand"><span id="oPvLabel"></span><b id="oPvNote"></b></div>
+    </div>
+    <ol class="flow">
+      <li>看算式，判斷等號右邊的答案對不對：<kbd>F</kbd> 對、<kbd>J</kbd> 錯，也可以直接點按鈕。</li>
+      <li>記住接著出現的注音符號。</li>
+      <li>算式和注音輪流出現，次數等於這個嘗試的長度。</li>
+      <li>依順序填入注音：點選畫面上的注音，或照注音鍵盤的位置直接打（不用切輸入法）。</li>
+      <li>按 <kbd>Enter</kbd> 確認後顯示答案，再按 <kbd>Enter</kbd> 或等時間到進下一個嘗試。<kbd>Esc</kbd> 提前結束。</li>
+    </ol>
+  </section>
+
+  <form id="oCfg" autocomplete="off">
+    <fieldset>
+      <legend>嘗試與長度</legend>
+      <div class="timing">
+        <label>嘗試次數<input type="number" id="oTrials" min="1" max="60" value="6"></label>
+        <label>最短長度<input type="number" id="oMin" min="1" max="12" value="3"></label>
+        <label>最長長度<input type="number" id="oMax" min="1" max="12" value="5"></label>
+      </div>
+      <p class="hint">長度＝這個嘗試有幾題算式，也就是要記幾個注音、填幾個格子。最短和最長設一樣，每個嘗試的長度就固定。各長度會平均分配到所有嘗試。</p>
+      <div class="row" style="margin-top:12px">
+        <span>長度順序</span>
+        <div class="seg" role="radiogroup" aria-label="長度順序">
+          <label><input type="radio" name="oOrder" value="rand" checked><span>隨機</span></label>
+          <label><input type="radio" name="oOrder" value="asc"><span>由短到長</span></label>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>算式</legend>
+      <div class="row">
+        <span>難度</span>
+        <div class="seg" role="radiogroup" aria-label="算式難度">
+          <label><input type="radio" name="oDiff" value="two" checked><span>兩步　(6 ÷ 2) + 1</span></label>
+          <label><input type="radio" name="oDiff" value="one"><span>一步　7 + 5</span></label>
+        </div>
+      </div>
+      <div class="row">
+        <label style="display:inline-flex;align-items:center;gap:8px">每題時限 <input type="number" id="oMathMs" min="0" max="60000" step="500" value="0"> ms</label>
+      </div>
+      <p class="hint">0 代表不限時間，等作答才往下；設定時限後，時間到沒作答算錯。</p>
+      <div class="row"><label class="check"><input type="checkbox" id="oMathFb"> 每題判斷後立刻顯示對錯</label></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>注音符號</legend>
+      <label class="stack">使用的注音（同一個嘗試內不重複）<input type="text" id="oPool" value="ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐ" aria-describedby="oPoolInfo"></label>
+      <p class="hint" id="oPoolInfo"></p>
+      <div class="timing" style="margin-top:12px">
+        <label>注音顯示（ms）<input type="number" id="oLetMs" min="200" max="10000" step="100" value="1000"></label>
+        <label>間隔空白（ms）<input type="number" id="oGapMs" min="0" max="10000" step="100" value="500"></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>答案顯示</legend>
+      <p class="hint" style="margin:0 0 10px">每個嘗試最後會先出現作答格子，按「確認」之後才顯示答案。</p>
+      <div class="row">
+        <span>答案停留</span>
+        <div class="seg" role="radiogroup" aria-label="答案停留方式">
+          <label><input type="radio" name="oAdv" value="manual" checked><span>按 Enter 才下一題</span></label>
+          <label><input type="radio" name="oAdv" value="auto"><span>固定時間</span></label>
+        </div>
+        <label style="display:inline-flex;align-items:center;gap:6px"><input type="number" id="oAnsMs" min="500" max="30000" step="500" value="4000" aria-label="答案停留毫秒"> ms</label>
+      </div>
+    </fieldset>
+
+    <div class="actions">
+      <button type="button" class="btn primary" id="oStartFs">全螢幕開始</button>
+      <button type="button" class="btn" id="oStartWin">在此視窗開始</button>
+    </div>
+    <p class="err" id="oErr" role="alert"></p>
+  </form>
+</main>
+
+<div id="oRunner" hidden>
+  <div id="oStage"></div>
+  <div id="oHud"></div>
+</div>
+
+<main id="oResultView" class="results" hidden>
+  <h2>OSPAN 結果</h2>
+  <p class="lead" id="oResLead"></p>
+  <div class="summary" id="oSummary"></div>
+  <div class="actions" style="margin-bottom:20px">
+    <button type="button" class="btn primary" id="oAgain">用相同設定再做一次</button>
+    <button type="button" class="btn" id="oBack">回到設定</button>
+    <button type="button" class="btn" id="oCopy">複製結果（CSV）</button>
+    <span class="copied" id="oCopied" aria-live="polite"></span>
+  </div>
+  <div class="tablewrap"><table class="trials" id="oTable"></table></div>
+</main>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const COLORS={R:{name:'紅',hex:'#E5383B'},G:{name:'綠',hex:'#2DB24F'},Y:{name:'黃',hex:'#F6CF1D'},B:{name:'藍',hex:'#2F6BE5'}};
+const CODE={R:1,G:2,Y:3,B:4};
+// Cogent 座標（y 向上），與原程式相同的 8 個位置
+const POS=[[70,-70],[-70,70],[70,70],[-70,-70],[0,100],[0,-100],[100,0],[-100,0]];
+const LEFT_SETS={1:[1,0],3:[3,2,1,0],5:[5,4,3,2,1,0]};
+const LEVELS=[1,3,5];
+
+const rint=n=>Math.floor(Math.random()*n);
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rint(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function balanced(items,n){const out=[];while(out.length<n)out.push(...shuffle(items.slice()));return shuffle(out.slice(0,n));}
+
+function complexity(L,left){
+  if(L===1)return{c:1,ent:0};
+  if(L===3)return(left===3||left===0)?{c:2,ent:1}:{c:3,ent:2.58};
+  if(left===0||left===5)return{c:4,ent:1.58};
+  if(left===1||left===4)return{c:5,ent:2.91};
+  return{c:6,ent:4.91};
+}
+
+function makeTrial(L,left,color,pm){
+  const pos=shuffle(POS.slice()).slice(0,L);
+  const dirs=shuffle(Array(left).fill('L').concat(Array(L-left).fill('R')));
+  const major=left>L-left?'L':'R';
+  const cx=complexity(L,left);
+  return{L,left,right:L-left,color,pm,pos,dirs,major,correct:pm?'PM':major,
+    trigger:100*(pm?2:1)+10*CODE[color]+cx.c,ent:cx.ent};
+}
+
+function pickPmIdx(n,k){
+  k=Math.min(k,n); if(k<=0)return[];
+  const idx=[];
+  for(let s=0;s<k;s++){
+    let lo=Math.floor(s*n/k),hi=Math.floor((s+1)*n/k);
+    if(s===0&&hi-lo>2&&n>4)lo=Math.min(2,hi-1); // 盡量不放在最前面
+    idx.push(lo+rint(Math.max(1,hi-lo)));
+  }
+  return idx;
+}
+
+function buildLevel(L,n,pmN,pm){
+  const others=pm==='none'?['R','G','Y','B']:['R','G','Y','B'].filter(c=>c!==pm);
+  const lefts=balanced(LEFT_SETS[L],n);
+  const cols=balanced(others,n);
+  const pmIdx=pm==='none'?[]:pickPmIdx(n,pmN);
+  return lefts.map((left,i)=>pmIdx.includes(i)?makeTrial(L,left,pm,true):makeTrial(L,left,cols[i],false));
+}
+
+function buildTrials(cfg){
+  const blocks=LEVELS.filter(L=>cfg.n[L]>0).map(L=>buildLevel(L,cfg.n[L],cfg.p[L],cfg.pm));
+  if(cfg.order==='seq')return blocks;
+  const all=shuffle(blocks.flat());
+  for(let i=0;i<Math.min(2,all.length);i++){ // 混合時避免 PM 落在第一、二題
+    if(all[i].pm){const j=all.findIndex((t,k)=>k>=2&&!t.pm);if(j>0)[all[i],all[j]]=[all[j],all[i]];}
+  }
+  return[all];
+}
+
+/* ---------- drawing ---------- */
+function arrowSVG(hex,dir){
+  return `<svg viewBox="0 0 100 56" aria-hidden="true" style="${dir==='L'?'transform:scaleX(-1)':''}"><path d="M4 19H58V5L97 28L58 51V37H4Z" fill="${hex}"/></svg>`;
+}
+function drawArrows(box,t,scale){
+  const W=box.clientWidth,H=box.clientHeight,u=Math.min(W/640,H/480);
+  const aw=50*u*scale,ah=28*u*scale,cx=W/2,cy=H/2;
+  let h='';
+  t.pos.forEach(([x,y],i)=>{
+    h+=`<div class="arrow" style="left:${cx+x*u-aw/2}px;top:${cy-y*u-ah/2}px;width:${aw}px;height:${ah}px">${arrowSVG(COLORS[t.color].hex,t.dirs[i])}</div>`;
+  });
+  box.innerHTML=h;
+}
+function drawFix(box){
+  const u=Math.min(box.clientWidth/640,box.clientHeight/480);
+  box.innerHTML=`<div class="fix" style="font-size:${40*u}px">+</div>`;
+}
+const dirText=d=>d==='L'?'← 左':'右 →';
+
+/* ---------- settings ---------- */
+const KEY='mft-web-settings-v1';
+function readCfg(){
+  const num=(id,d)=>{const v=parseInt($(id).value,10);return Number.isFinite(v)&&v>=0?v:d;};
+  const radio=n=>document.querySelector(`input[name="${n}"]:checked`).value;
+  const n={1:num('n1',0),3:num('n3',0),5:num('n5',0)};
+  const p={1:Math.min(num('p1',0),n[1]),3:Math.min(num('p3',0),n[3]),5:Math.min(num('p5',0),n[5])};
+  return{n,p,pm:radio('pm'),order:radio('order'),breaks:$('breaks').checked,
+    showAns:$('showAns').checked,revealKey:$('revealKey').checked,adv:radio('adv'),ansMs:num('ansMs',2500),
+    fixMs:num('fixMs',1000),stimMs:Math.max(100,num('stimMs',2000)),blankMs:num('blankMs',1500),
+    untilResp:$('untilResp').checked,hideOnResp:$('hideOnResp').checked,
+    size:parseFloat($('size').value)||1,hud:$('hud').checked};
+}
+function saveCfg(){try{localStorage.setItem(KEY,JSON.stringify(readCfg()));}catch(e){}}
+function loadCfg(){
+  let c;try{c=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){}
+  if(!c)return;
+  const set=(id,v)=>{if(v!=null)$(id).value=v;};
+  set('n1',c.n&&c.n[1]);set('n3',c.n&&c.n[3]);set('n5',c.n&&c.n[5]);
+  set('p1',c.p&&c.p[1]);set('p3',c.p&&c.p[3]);set('p5',c.p&&c.p[5]);
+  set('ansMs',c.ansMs);set('fixMs',c.fixMs);set('stimMs',c.stimMs);set('blankMs',c.blankMs);set('size',c.size);
+  ['breaks','showAns','revealKey','untilResp','hideOnResp','hud'].forEach(k=>{if(typeof c[k]==='boolean')$(k).checked=c[k];});
+  [['pm',c.pm],['order',c.order],['adv',c.adv]].forEach(([n,v])=>{const el=document.querySelector(`input[name="${n}"][value="${v}"]`);if(el)el.checked=true;});
+}
+function syncForm(){
+  const c=readCfg();
+  $('totalN').textContent=c.n[1]+c.n[3]+c.n[5];
+  const pmOff=c.pm==='none';
+  document.querySelectorAll('.pmn').forEach(el=>el.disabled=pmOff);
+  $('totalP').textContent=pmOff?'—':(c.p[1]+c.p[3]+c.p[5]);
+  $('ansMs').disabled=c.adv!=='auto'||!c.showAns;
+  document.querySelectorAll('input[name="adv"]').forEach(el=>el.disabled=!c.showAns);
+  $('revealKey').disabled=!c.showAns;
+  $('stimMs').disabled=c.untilResp;
+  $('breaks').disabled=c.order!=='seq';
+  $('sizeOut').textContent=Math.round(c.size*100)+'%';
+  const total=c.n[1]+c.n[3]+c.n[5];
+  $('err').textContent=total===0?'至少要有一個 level 的次數大於 0 才能開始。':'';
+  $('startFs').disabled=$('startWin').disabled=total===0;
+  saveCfg();
+}
+
+/* ---------- preview ---------- */
+let pvTimer=null,pvStep=0,pvTrial=null;
+function previewTick(){
+  const c=readCfg(),box=$('preview');
+  const L=LEVELS[pvStep%3];pvStep++;
+  const pool=c.pm==='none'?['R','G','Y','B']:['R','G','Y','B'].filter(x=>x!==c.pm);
+  const showPm=c.pm!=='none'&&pvStep%6===0;
+  pvTrial=makeTrial(L,LEFT_SETS[L][rint(LEFT_SETS[L].length)],showPm?c.pm:pool[rint(pool.length)],showPm);
+  drawArrows(box,pvTrial,c.size);
+  $('pvLabel').textContent=`Set ${L}　左 ${pvTrial.left}：右 ${pvTrial.right}`;
+  $('pvAnswer').textContent=pvTrial.pm?`目標色 → 空白鍵`:`答案 ${dirText(pvTrial.major)}`;
+}
+function startPreview(){
+  stopPreview();previewTick();
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches)pvTimer=setInterval(previewTick,2600);
+}
+function stopPreview(){if(pvTimer)clearInterval(pvTimer);pvTimer=null;}
+
+/* ---------- runner ---------- */
+const ABORT={};
+let running=false,pending=null,redraw=null,lastCfg=null,results=[],lastBlocks=null;
+const stage=$('stage'),runner=$('runner'),ansBox=$('answer'),hudEl=$("hudText");
+
+function wait(ms,accept){
+  return new Promise((resolve,reject)=>{
+    const p={accept:accept||null,resolve,reject,timer:null};
+    if(ms!==Infinity)p.timer=setTimeout(()=>{if(pending===p)pending=null;resolve(null);},ms);
+    pending=p;
+  });
+}
+function deliver(code,t){
+  if(!pending||!pending.accept||!pending.accept(code))return false;
+  const p=pending;pending=null;clearTimeout(p.timer);p.resolve({code,t});return true;
+}
+const RESP={KeyZ:'L',Slash:'R',Space:'PM',NumpadDivide:'R'};
+document.addEventListener('keydown',e=>{
+  if(!running)return;
+  if(['Space','Slash','KeyZ','Enter','ArrowRight','NumpadDivide'].includes(e.code))e.preventDefault();
+  if(e.repeat)return;
+  if(e.code==='Escape'){abortRun();return;}
+  deliver(e.code,performance.now());
+});
+runner.addEventListener('pointerdown',()=>{if(running)deliver('Click',performance.now());});
+addEventListener('resize',()=>{if(running&&redraw)redraw();else if(!$('setupView').hidden&&pvTrial)drawArrows($('preview'),pvTrial,readCfg().size);});
+
+function abortRun(){
+  if(!running)return;running=false;
+  if(pending){const p=pending;pending=null;clearTimeout(p.timer);p.reject(ABORT);}
+}
+const frame=()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(()=>r(performance.now()))));
+const isAdvance=c=>c==='Enter'||c==='Space'||c==='ArrowRight'||c==='Click';
+
+function showMsg(lines,small){
+  const u=Math.min(innerWidth/640,innerHeight/480);
+  redraw=()=>showMsg(lines,small);
+  ansBox.hidden=true;
+  stage.innerHTML=`<div class="msg">${lines.map(l=>`<p style="font-size:${Math.round(40*u*0.62)}px">${l}</p>`).join('')}${small?`<p class="small">${small}</p>`:''}</div>`;
+}
+
+async function run(withFs){
+  const cfg=readCfg();lastCfg=cfg;results=[];
+  const blocks=buildTrials(cfg);lastBlocks=blocks;
+  const total=blocks.reduce((s,b)=>s+b.length,0);
+  stopPreview();
+  $('setupView').hidden=true;$('resultView').hidden=true;runner.hidden=false;
+  if(withFs){try{await document.documentElement.requestFullscreen();}catch(e){}}
+  await new Promise(r=>setTimeout(r,120));
+  running=true;hudEl.textContent='';hudEl.hidden=!cfg.hud;
+  try{
+    const lines=['請判斷出現在螢幕上的箭頭主要方向','右邊請按「/」鍵；左邊請按「z」鍵'];
+    if(cfg.pm!=='none')lines.push(`若箭頭顏色為${COLORS[cfg.pm].name}色，請按空白鍵`);
+    runner.classList.add('showcursor');
+    showMsg(lines,'按空白鍵或點一下開始');
+    await wait(Infinity,isAdvance);
+    runner.classList.remove('showcursor');
+    let k=0;
+    for(let b=0;b<blocks.length;b++){
+      if(b>0&&cfg.order==='seq'&&cfg.breaks){
+        runner.classList.add('showcursor');
+        showMsg([`Set ${blocks[b-1][0].L} 完成`,`接下來：每次 ${blocks[b][0].L} 個箭頭`],'按空白鍵或點一下繼續');
+        await wait(Infinity,isAdvance);
+        runner.classList.remove('showcursor');
+      }
+      for(const t of blocks[b]){
+        k++;hudEl.textContent=`${k} / ${total}`;
+        await doTrial(t,k,cfg);
+      }
+    }
+    running=false;
+    showMsg(['此階段結束'],'按任意鍵或點一下查看結果');
+    running=true;runner.classList.add('showcursor');
+    await wait(Infinity,()=>true);
+  }catch(e){if(e!==ABORT)console.error(e);}
+  running=false;pending=null;redraw=null;
+  runner.classList.remove('showcursor');
+  if(document.fullscreenElement){try{await document.exitFullscreen();}catch(e){}}
+  runner.hidden=true;stage.innerHTML='';ansBox.hidden=true;
+  showResults();
+}
+
+async function doTrial(t,k,cfg){
+  ansBox.hidden=true;
+  redraw=()=>drawFix(stage);drawFix(stage);
+  await wait(cfg.fixMs);
+  redraw=()=>drawArrows(stage,t,cfg.size);redraw();
+  const t1=await frame();
+  const win=cfg.untilResp?Infinity:cfg.stimMs;
+  const r=await wait(win,c=>c in RESP);
+  let resp='none',rt=null;
+  if(r){resp=RESP[r.code];rt=Math.round(r.t-t1);}
+  if(r&&!cfg.hideOnResp&&win!==Infinity){const left=win-(performance.now()-t1);if(left>0)await wait(left);}
+  const acc=resp==='none'?99:(resp===t.correct?1:0);
+  results.push({k,t,resp,rt,acc});
+  if(cfg.showAns){
+    if(cfg.revealKey){
+      // 空白等待：主持人按 Enter（或點一下、→）才揭曉答案
+      stage.innerHTML='';redraw=null;
+      await wait(250);
+      runner.classList.add('showcursor');
+      await wait(Infinity,c=>c==='Enter'||c==='ArrowRight'||c==='Click');
+      runner.classList.remove('showcursor');
+    }
+    redraw=()=>{drawArrows(stage,t,cfg.size);};redraw();
+    renderAnswer(t,resp,rt,acc,cfg);
+    if(cfg.adv==='auto')await wait(cfg.ansMs);
+    else{await wait(250);runner.classList.add('showcursor');await wait(Infinity,isAdvance);runner.classList.remove('showcursor');}
+    ansBox.hidden=true;
+  }
+  stage.innerHTML='';redraw=null;
+  await wait(cfg.blankMs);
+}
+
+function respText(r){return r==='L'?'左':r==='R'?'右':r==='PM'?'空白鍵':'未作答';}
+function renderAnswer(t,resp,rt,acc,cfg){
+  let h=`<div class="dir">${dirText(t.major)}</div><div class="ratio">左 ${t.left}　：　右 ${t.right}</div>`;
+  if(t.pm)h+=`<div class="pm" style="color:${COLORS[t.color].hex}">${COLORS[t.color].name}色目標出現 → 應按空白鍵</div>`;
+  if(resp!=='none')h+=`<div class="resp">反應：${respText(resp)}　${acc===1?'正確':'錯誤'}　${rt} ms</div>`;
+  if(cfg.adv==='manual')h+=`<div class="next">Enter 或點一下進下一題</div>`;
+  ansBox.innerHTML=h;ansBox.hidden=false;
+}
+
+/* ---------- results ---------- */
+const mean=a=>a.length?Math.round(a.reduce((s,x)=>s+x,0)/a.length):null;
+function showResults(){
+  $('resultView').hidden=false;window.scrollTo(0,0);
+  const planned=lastBlocks.reduce((s,b)=>s+b.length,0);
+  const done=results.length;
+  const correctAll=results.filter(r=>r.acc===1).length;
+  $('resLead').textContent=done<planned?`提前結束：完成 ${done} / ${planned} 題。`:`完成 ${done} 題，共答對 ${correctAll} 題。`;
+  let s='';
+  LEVELS.forEach(L=>{
+    const rs=results.filter(r=>r.t.L===L);if(!rs.length)return;
+    const ong=rs.filter(r=>!r.t.pm),pms=rs.filter(r=>r.t.pm);
+    const ok=ong.filter(r=>r.acc===1).length;
+    const rtm=mean(ong.filter(r=>r.acc===1).map(r=>r.rt));
+    const nr=rs.filter(r=>r.acc===99).length;
+    s+=`<div><h3>Set ${L}</h3><div class="acc">${ong.length?Math.round(ok/ong.length*100)+'%':'—'}</div>
+      <p>方向判斷答對 ${ok} / ${ong.length}</p><p>平均 RT（答對）${rtm!=null?rtm+' ms':'—'}</p>
+      ${pms.length?`<p>PM 命中 ${pms.filter(r=>r.acc===1).length} / ${pms.length}</p>`:''}<p>未作答 ${nr}</p></div>`;
+  });
+  $('summary').innerHTML=s||'<div><p>沒有完成任何題目。</p></div>';
+  let h='<thead><tr><th>題號</th><th>Level</th><th>顏色</th><th>左：右</th><th>主要方向（答案）</th><th>正確反應</th><th>實際反應</th><th>RT</th><th>正誤</th><th>Trigger</th></tr></thead><tbody>';
+  results.forEach(r=>{
+    const t=r.t;
+    h+=`<tr><td>${r.k}</td><td>Set ${t.L}</td><td class="dot"><i style="background:${COLORS[t.color].hex}"></i>${COLORS[t.color].name}${t.pm?'（PM）':''}</td>
+      <td>${t.left}：${t.right}</td><td><b>${dirText(t.major)}</b></td><td>${t.pm?'空白鍵':respText(t.major)}</td>
+      <td>${respText(r.resp)}</td><td>${r.rt!=null?r.rt+' ms':'—'}</td>
+      <td class="${r.acc===1?'ok':r.acc===0?'bad':'none'}">${r.acc===1?'對':r.acc===0?'錯':'—'}</td><td>${t.trigger}</td></tr>`;
+  });
+  $('trialTable').innerHTML=h+'</tbody>';
+  $('copied').textContent='';
+}
+function toCSV(){
+  const head='trial,set,color,pm,left,right,major,correct_key,response,rt_ms,acc,entropy,trigger';
+  return[head].concat(results.map(r=>{const t=r.t;return[r.k,t.L,t.color,t.pm?1:0,t.left,t.right,t.major,t.correct,r.resp,r.rt??-1,r.acc,t.ent,t.trigger].join(',');})).join('\n');
+}
+
+/* ---------- wire up ---------- */
+loadCfg();syncForm();
+window.MFT={startPreview,stopPreview};
+$('cfg').addEventListener('input',()=>{syncForm();});
+$('cfg').addEventListener('change',()=>{syncForm();startPreview();});
+$('cfg').addEventListener('submit',e=>e.preventDefault());
+$('startFs').addEventListener('click',()=>run(true));
+$('startWin').addEventListener('click',()=>run(false));
+$('again').addEventListener('click',()=>run(true));
+$('back').addEventListener('click',()=>{$('resultView').hidden=true;$('setupView').hidden=false;startPreview();window.scrollTo(0,0);});
+$('copy').addEventListener('click',async()=>{
+  try{await navigator.clipboard.writeText(toCSV());$('copied').textContent='已複製，可直接貼到 Excel。';}
+  catch(e){$('copied').textContent='瀏覽器不允許複製，請改用滑鼠選取表格。';}
+});
+})();
+</script>
+
+<script>
+/* ================= OSPAN ================= */
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+// 大千（標準）注音鍵盤位置：不需切換輸入法，直接用實體按鍵位置對應
+const DAQIAN={Digit1:'ㄅ',KeyQ:'ㄆ',KeyA:'ㄇ',KeyZ:'ㄈ',Digit2:'ㄉ',KeyW:'ㄊ',KeyS:'ㄋ',KeyX:'ㄌ',KeyE:'ㄍ',KeyD:'ㄎ',KeyC:'ㄏ',KeyR:'ㄐ',KeyF:'ㄑ',KeyV:'ㄒ',Digit5:'ㄓ',KeyT:'ㄔ',KeyG:'ㄕ',KeyB:'ㄖ',KeyY:'ㄗ',KeyH:'ㄘ',KeyN:'ㄙ',KeyU:'ㄧ',KeyJ:'ㄨ',KeyM:'ㄩ',Digit8:'ㄚ',KeyI:'ㄛ',KeyK:'ㄜ',Comma:'ㄝ',Digit9:'ㄞ',KeyO:'ㄟ',KeyL:'ㄠ',Period:'ㄡ',Digit0:'ㄢ',KeyP:'ㄣ',Semicolon:'ㄤ',Slash:'ㄥ',Minus:'ㄦ'};
+const SKIP='？';
+const ABORT={};
+const rint=n=>Math.floor(Math.random()*n);
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rint(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- 題目 ---------- */
+function makeMath(diff){
+  let text,ans;
+  if(diff==='one'){
+    const a=1+rint(9),b=1+rint(9);
+    if(rint(2)){text=`${a} + ${b}`;ans=a+b;}
+    else{const x=Math.max(a,b),y=Math.min(a,b);text=`${x} − ${y}`;ans=x-y;}
+  }else{
+    let a,b,p,op;
+    if(rint(2)){a=1+rint(9);b=1+rint(9);p=a*b;op='×';}
+    else{b=1+rint(9);p=1+rint(9);a=b*p;op='÷';}
+    const c=1+rint(9);
+    if(rint(2)||p-c<0){ans=p+c;text=`(${a} ${op} ${b}) + ${c}`;}
+    else{ans=p-c;text=`(${a} ${op} ${b}) − ${c}`;}
+  }
+  const isTrue=Math.random()<0.5;
+  let shown=ans;
+  if(!isTrue){do{shown=ans+(rint(2)?1:-1)*(1+rint(3));}while(shown<0||shown===ans);}
+  return{text,ans,shown,isTrue};
+}
+function buildTrials(c){
+  const range=[];for(let s=c.min;s<=c.max;s++)range.push(s);
+  let sizes=[];while(sizes.length<c.trials)sizes.push(...shuffle(range.slice()));
+  sizes=shuffle(sizes.slice(0,c.trials));
+  if(c.order==='asc')sizes.sort((a,b)=>a-b);
+  return sizes.map(n=>({size:n,letters:shuffle(c.pool.slice()).slice(0,n),maths:Array.from({length:n},()=>makeMath(c.diff))}));
+}
+
+/* ---------- 設定 ---------- */
+const KEY='ospan-web-settings-v1';
+function readCfg(){
+  const num=(id,d)=>{const v=parseInt($(id).value,10);return Number.isFinite(v)?v:d;};
+  const radio=n=>document.querySelector(`input[name="${n}"]:checked`).value;
+  const pool=[...new Set(Array.from($('oPool').value.replace(/[\s,，、]/g,'')))];
+  return{trials:num('oTrials',6),min:num('oMin',3),max:num('oMax',5),order:radio('oOrder'),diff:radio('oDiff'),
+    mathMs:Math.max(0,num('oMathMs',0)),mathFb:$('oMathFb').checked,pool,poolText:$('oPool').value,
+    letMs:Math.max(100,num('oLetMs',1000)),gapMs:Math.max(0,num('oGapMs',500)),adv:radio('oAdv'),ansMs:Math.max(300,num('oAnsMs',4000))};
+}
+function validate(c){
+  if(c.trials<1)return'嘗試次數至少要 1。';
+  if(c.min<1||c.max<1)return'長度至少要 1。';
+  if(c.min>c.max)return'最短長度不能大於最長長度。';
+  if(c.max>12)return'最長長度上限是 12。';
+  if(c.pool.length<c.max)return`目前只有 ${c.pool.length} 個注音，最長長度是 ${c.max}，至少要 ${c.max} 個才不會重複。`;
+  return'';
+}
+function sync(){
+  const c=readCfg();
+  const e=validate(c);
+  $('oErr').textContent=e;
+  $('oStartFs').disabled=$('oStartWin').disabled=!!e;
+  $('oAnsMs').disabled=c.adv!=='auto';
+  const typable=c.pool.filter(ch=>Object.values(DAQIAN).includes(ch)).length;
+  $('oPoolInfo').textContent=`目前 ${c.pool.length} 個注音。`+(typable<c.pool.length?`其中 ${c.pool.length-typable} 個不是注音符號，作答時只能用點的。`:'');
+  try{localStorage.setItem(KEY,JSON.stringify(c));}catch(err){}
+}
+function load(){
+  let c;try{c=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){}
+  if(!c)return;
+  const set=(id,v)=>{if(v!=null)$(id).value=v;};
+  set('oTrials',c.trials);set('oMin',c.min);set('oMax',c.max);set('oMathMs',c.mathMs);set('oPool',c.poolText);
+  set('oLetMs',c.letMs);set('oGapMs',c.gapMs);set('oAnsMs',c.ansMs);
+  if(typeof c.mathFb==='boolean')$('oMathFb').checked=c.mathFb;
+  [['oOrder',c.order],['oDiff',c.diff],['oAdv',c.adv]].forEach(([n,v])=>{const el=document.querySelector(`input[name="${n}"][value="${v}"]`);if(el)el.checked=true;});
+}
+
+/* ---------- 預覽 ---------- */
+const PV=[
+  {h:'<div class="m">(6 ÷ 2) + 1 = 4　？</div><div class="tf"><span>對</span><span>錯</span></div>',l:'算式：判斷答案對不對',n:'答案 對'},
+  {h:'<div class="l">ㄇ</div>',l:'注音：記住它',n:''},
+  {h:'<div class="m">(2 × 4) − 3 = 6　？</div><div class="tf"><span>對</span><span>錯</span></div>',l:'算式：判斷答案對不對',n:'答案 錯'},
+  {h:'<div class="l">ㄎ</div>',l:'注音：記住它',n:''},
+  {h:'<div class="m" style="font-size:7cqh">依出現順序填入注音符號</div><div class="bx"><span>ㄇ</span><span>ㄎ</span></div>',l:'最後依順序填回',n:'確認後揭曉'}
+];
+let pvTimer=null,pvI=0;
+function pvShow(){const f=PV[pvI%PV.length];$('oPreview').innerHTML=`<div class="o-pv">${f.h}</div>`;$('oPvLabel').textContent=f.l;$('oPvNote').textContent=f.n;}
+function startPv(){stopPv();pvI=0;pvShow();if(!matchMedia('(prefers-reduced-motion: reduce)').matches)pvTimer=setInterval(()=>{pvI++;pvShow();},2000);}
+function stopPv(){if(pvTimer)clearInterval(pvTimer);pvTimer=null;}
+
+/* ---------- 執行 ---------- */
+let running=false,pend=null,keyHandler=null,recallAct=null,cfg=null,trials=[],results=[];
+const R=$('oRunner'),S=$('oStage'),HUD=$('oHud');
+function wait(ms,accept){
+  return new Promise((resolve,reject)=>{
+    const p={accept:accept||null,resolve,reject,timer:null};
+    if(ms!==Infinity)p.timer=setTimeout(()=>{if(pend===p)pend=null;resolve(null);},ms);
+    pend=p;
+  });
+}
+function deliver(code){
+  if(!pend||!pend.accept||!pend.accept(code))return false;
+  const p=pend;pend=null;clearTimeout(p.timer);p.resolve({code,t:performance.now()});return true;
+}
+function abort(){
+  if(!running)return;running=false;keyHandler=null;recallAct=null;
+  if(pend){const p=pend;pend=null;clearTimeout(p.timer);p.reject(ABORT);}
+}
+const frame=()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(()=>r(performance.now()))));
+const isAdv=c=>c==='Enter'||c==='Space'||c==='Click';
+const center=h=>{S.innerHTML=`<div class="o-center">${h}</div>`;};
+
+document.addEventListener('keydown',e=>{
+  if(!running)return;
+  if(e.code==='Escape'){abort();return;}
+  if(keyHandler){keyHandler(e);return;}
+  if(['Space','Enter','KeyF','KeyJ'].includes(e.code))e.preventDefault();
+  if(e.repeat)return;
+  deliver(e.code);
+});
+R.addEventListener('click',e=>{
+  if(!running)return;
+  const b=e.target.closest('[data-act]');
+  if(b){const a=b.dataset.act;if(a==='T'||a==='F')deliver('Btn'+a);else if(recallAct)recallAct(a,b.dataset.ch);return;}
+  deliver('Click');
+});
+
+function recall(n){
+  const vals=Array(n).fill(null),pool=cfg.pool;
+  const cols=pool.length<=12?6:pool.length<=21?7:8;
+  const sz=pool.length<=12?8.5:pool.length<=21?7.2:6;
+  center(`<div class="o-title">依出現順序填入注音符號</div>
+    <div class="o-boxes" id="oBoxes"></div>
+    <div class="o-pad" style="grid-template-columns:repeat(${cols},${sz}vh)">${pool.map(ch=>`<button type="button" data-act="pad" data-ch="${esc(ch)}" style="height:${sz}vh;font-size:${sz*0.58}vh">${esc(ch)}</button>`).join('')}</div>
+    <div class="o-ctrl">
+      <button type="button" data-act="skip">這格不記得（空白鍵）</button>
+      <button type="button" data-act="del">刪除（Backspace）</button>
+      <button type="button" data-act="clear">全部清除</button>
+      <button type="button" class="go" data-act="ok">確認（Enter）</button>
+    </div>`);
+  const boxes=$('oBoxes');
+  const draw=()=>{const cur=vals.indexOf(null);boxes.innerHTML=vals.map((v,i)=>`<div class="o-box${i===cur?' cur':''}">${v==null?'':esc(v)}</div>`).join('');};
+  const put=ch=>{const i=vals.indexOf(null);if(i<0)return;vals[i]=ch;draw();};
+  const del=()=>{for(let i=n-1;i>=0;i--)if(vals[i]!==null){vals[i]=null;break;}draw();};
+  draw();
+  recallAct=(a,ch)=>{
+    if(a==='pad')put(ch);else if(a==='skip')put(SKIP);else if(a==='del')del();
+    else if(a==='clear'){vals.fill(null);draw();}else if(a==='ok')deliver('Confirm');
+  };
+  keyHandler=e=>{
+    if(e.code==='Enter'){e.preventDefault();if(!e.repeat)deliver('Confirm');return;}
+    if(e.code==='Backspace'){e.preventDefault();del();return;}
+    if(e.code==='Space'){e.preventDefault();if(!e.repeat)put(SKIP);return;}
+    if(e.ctrlKey||e.metaKey||e.altKey)return;
+    let ch=DAQIAN[e.code];
+    if(!(ch&&pool.includes(ch))&&pool.includes(e.key))ch=e.key;
+    if(ch&&pool.includes(ch)){e.preventDefault();if(!e.repeat)put(ch);}
+  };
+  const done=()=>{keyHandler=null;recallAct=null;};
+  return wait(Infinity,c=>c==='Confirm').then(()=>{done();return vals.map(v=>v==null?'':v);},err=>{done();throw err;});
+}
+
+function showAnswer(r){
+  const box=(v,cls)=>`<div class="o-box ${cls}">${v?esc(v):''}</div>`;
+  const chips=r.maths.map(m=>`<span class="${m.ok?'g':'b'}">${m.text} = ${m.shown}　應選「${m.isTrue?'對':'錯'}」${m.resp==='none'?'　未作答':m.ok?'　✓':'　✗ 選了「'+(m.resp==='T'?'對':'錯')+'」'}</span>`).join('');
+  center(`<div class="o-title">${r.all?'全部正確':`位置正確 ${r.nPos} / ${r.size}`}</div>
+    <div class="o-row"><span class="lab">正確順序</span><div class="o-boxes">${r.letters.map(l=>box(l,'')).join('')}</div></div>
+    <div class="o-row"><span class="lab">你的作答</span><div class="o-boxes">${r.input.map((v,i)=>box(v,r.pos[i]?'ok':'bad')).join('')}</div></div>
+    <p class="o-sub">算式判斷正確 ${r.mathOk} / ${r.size}</p>
+    <div class="o-chips">${chips}</div>
+    ${cfg.adv==='manual'?'<div class="o-next">Enter 或點一下進下一個嘗試</div>':''}`);
+}
+
+async function run(fs){
+  cfg=readCfg();
+  const err=validate(cfg);if(err){$('oErr').textContent=err;return;}
+  trials=buildTrials(cfg);results=[];
+  stopPv();
+  $('ospanSetup').hidden=true;$('oResultView').hidden=true;R.hidden=false;
+  if(fs){try{await document.documentElement.requestFullscreen();}catch(e){}}
+  await new Promise(r=>setTimeout(r,120));
+  running=true;HUD.textContent='';
+  try{
+    center(`<p class="o-msg">判斷算式的答案對不對：對按 F，錯按 J</p>
+      <p class="o-msg">接著記住出現的注音符號</p>
+      <p class="o-msg">每個嘗試最後，依出現順序填入所有注音</p>
+      <p class="o-sub">按空白鍵或點一下開始</p>`);
+    await wait(Infinity,isAdv);
+    for(let k=0;k<trials.length;k++){
+      const t=trials[k];
+      HUD.textContent=`嘗試 ${k+1} / ${trials.length}`;
+      S.innerHTML='';await wait(Math.max(600,cfg.gapMs));
+      const mres=[];
+      for(let i=0;i<t.size;i++){
+        const m=t.maths[i];
+        center(`<div class="o-math">${m.text} = ${m.shown} ？</div>
+          <div class="o-tf"><button type="button" data-act="T">對<small>F</small></button><button type="button" data-act="F">錯<small>J</small></button></div>`);
+        const t0=await frame();
+        const r=await wait(cfg.mathMs>0?cfg.mathMs:Infinity,c=>c==='KeyF'||c==='KeyJ'||c==='BtnT'||c==='BtnF');
+        let resp='none',rt=null;
+        if(r){resp=(r.code==='KeyF'||r.code==='BtnT')?'T':'F';rt=Math.round(r.t-t0);}
+        const ok=resp!=='none'&&((resp==='T')===m.isTrue);
+        mres.push(Object.assign({},m,{resp,rt,ok}));
+        if(cfg.mathFb){center(`<div class="o-fb ${ok?'good':'bad'}">${resp==='none'?'時間到':ok?'正確':'錯誤'}</div>`);await wait(600);}
+        center(`<div class="o-letter">${esc(t.letters[i])}</div>`);
+        await wait(cfg.letMs);
+        S.innerHTML='';await wait(cfg.gapMs);
+      }
+      const input=await recall(t.size);
+      const pos=input.map((v,i)=>v===t.letters[i]);
+      const nPos=pos.filter(Boolean).length;
+      const rec={k:k+1,size:t.size,letters:t.letters,input,pos,nPos,all:nPos===t.size,maths:mres,mathOk:mres.filter(m=>m.ok).length};
+      results.push(rec);
+      showAnswer(rec);
+      if(cfg.adv==='auto')await wait(cfg.ansMs);
+      else{await wait(250);await wait(Infinity,c=>c==='Enter'||c==='Click');}
+    }
+    S.innerHTML='';
+    center('<p class="o-msg">此階段結束</p><p class="o-sub">按任意鍵或點一下查看結果</p>');
+    await wait(Infinity,()=>true);
+  }catch(e){if(e!==ABORT)console.error(e);}
+  running=false;pend=null;keyHandler=null;recallAct=null;
+  if(document.fullscreenElement){try{await document.exitFullscreen();}catch(e){}}
+  R.hidden=true;S.innerHTML='';HUD.textContent='';
+  showResults();
+}
+
+/* ---------- 結果 ---------- */
+function showResults(){
+  $('oResultView').hidden=false;window.scrollTo(0,0);
+  const done=results.length,planned=trials.length;
+  const total=results.reduce((s,r)=>s+r.size,0);
+  const fullN=results.filter(r=>r.all).length;
+  const abs=results.filter(r=>r.all).reduce((s,r)=>s+r.size,0);
+  const part=results.reduce((s,r)=>s+r.nPos,0);
+  const mo=results.reduce((s,r)=>s+r.mathOk,0);
+  const timeouts=results.reduce((s,r)=>s+r.maths.filter(m=>m.resp==='none').length,0);
+  $('oResLead').textContent=done<planned?`提前結束：完成 ${done} / ${planned} 個嘗試。`:`完成 ${done} 個嘗試。`;
+  $('oSummary').innerHTML=done?`
+    <div><h3>絕對分數</h3><div class="acc">${abs}</div><p>全對嘗試的長度加總（滿分 ${total}）</p><p>全對嘗試 ${fullN} / ${done}</p></div>
+    <div><h3>部分分數</h3><div class="acc">${part}</div><p>填在正確位置的注音數（共 ${total} 個）</p></div>
+    <div><h3>算式正確率</h3><div class="acc">${total?Math.round(mo/total*100):0}%</div><p>正確 ${mo} / ${total}</p>${cfg.mathMs>0?`<p>時間到未作答 ${timeouts}</p>`:''}<p>常見納入標準：85% 以上</p></div>`
+    :'<div><p>沒有完成任何嘗試。</p></div>';
+  let h='<thead><tr><th>嘗試</th><th>長度</th><th>正確順序</th><th>作答</th><th>位置正確</th><th>全對</th><th>算式正確</th></tr></thead><tbody>';
+  results.forEach(r=>{
+    const mine=r.input.map((v,i)=>`<span class="${r.pos[i]?'ok':'bad'}">${v?esc(v):'＿'}</span>`).join(' ');
+    h+=`<tr><td>${r.k}</td><td>${r.size}</td><td style="font-family:var(--kai);font-size:17px">${r.letters.map(esc).join(' ')}</td>
+      <td style="font-family:var(--kai);font-size:17px">${mine}</td><td>${r.nPos} / ${r.size}</td>
+      <td class="${r.all?'ok':'none'}">${r.all?'是':'—'}</td><td>${r.mathOk} / ${r.size}</td></tr>`;
+  });
+  $('oTable').innerHTML=h+'</tbody>';
+  $('oCopied').textContent='';
+}
+function toCSV(){
+  const rows=['trial,size,letters,response,correct_positions,all_correct,math_correct,math_items'];
+  results.forEach(r=>{
+    const items=r.maths.map(m=>`${m.text.replace(/\s/g,'')}=${m.shown}|${m.isTrue?'T':'F'}|${m.resp}|${m.rt??-1}`).join(' ; ');
+    rows.push([r.k,r.size,r.letters.join(''),r.input.map(v=>v||'_').join(''),r.nPos,r.all?1:0,r.mathOk,`"${items}"`].join(','));
+  });
+  return rows.join('\n');
+}
+
+/* ---------- 綁定 ---------- */
+load();sync();
+$('oCfg').addEventListener('input',sync);
+$('oCfg').addEventListener('change',sync);
+$('oCfg').addEventListener('submit',e=>e.preventDefault());
+$('oStartFs').addEventListener('click',()=>run(true));
+$('oStartWin').addEventListener('click',()=>run(false));
+$('oAgain').addEventListener('click',()=>run(true));
+$('oBack').addEventListener('click',()=>{$('oResultView').hidden=true;$('ospanSetup').hidden=false;startPv();window.scrollTo(0,0);});
+$('oCopy').addEventListener('click',async()=>{
+  try{await navigator.clipboard.writeText(toCSV());$('oCopied').textContent='已複製，可直接貼到 Excel。';}
+  catch(e){$('oCopied').textContent='瀏覽器不允許複製，請改用滑鼠選取表格。';}
+});
+window.OSPAN={startPv,stopPv};
+})();
+
+/* ================= 切換實驗 ================= */
+(function(){
+  const $=id=>document.getElementById(id);
+  function route(){
+    if(!$('runner').hidden||!$('oRunner').hidden)return;
+    const o=location.hash==='#ospan';
+    $('setupView').hidden=o;$('resultView').hidden=true;
+    $('ospanSetup').hidden=!o;$('oResultView').hidden=true;
+    $('tabMft').setAttribute('aria-current',o?'false':'page');
+    $('tabOspan').setAttribute('aria-current',o?'page':'false');
+    if(o){window.MFT.stopPreview();window.OSPAN.startPv();}
+    else{window.OSPAN.stopPv();window.MFT.startPreview();}
+  }
+  addEventListener('hashchange',route);
+  route();
+})();
+</script>
+</body>
+</html>
